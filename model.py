@@ -33,15 +33,103 @@ class Table():
         return str(self.table)
 
 
+class FourBlockStick():
+    ''' OOOO - what is stick look like
+    1111
+    0000
+    0000
+    0000
+    1 - is the place, where the blocks placed and 0 is empty spaces
+    '''
+
+    def __init__(self):
+        rows = 4
+        columns = 4
+        print("Create class FourBlockStick")
+        self.shape = np.zeros(rows * columns, np.int32).reshape(
+                        rows, columns)
+        self.shape[0] = np.ones(rows, np.int32)
+        print(self.shape)
+        input()
+
+
+class StickType():
+
+    def __init__(self, type_id):
+        print("Create class StickType")
+        '''
+        probably we will create a class for each stick type
+        and each rotation position
+        and each??(this could be in this class and different
+        for 3x3 4x4 subfields) function to check
+        is the rotation possible.
+
+          0   1   2   3   4  5   6
+        OOOO OOO OOO OO OO   OO  O
+             O     O OO  OO OO  OOO
+        we send to constructor type id = integer from 0 to 6
+        and create a certain figure, which has it's own
+        placement in subfield
+        we will be have 3 +- types of subfields:
+        and a few rotation positions
+        for OOOO
+            .... OOOO ...O
+            .... .... ...O
+            .... .... ...O
+            .... .... ...O
+        for OOO
+            O
+        ... OOO .OO ..O .O.
+        ... O.. ..O OOO .O.
+        ... ... ..O ... .OO
+
+        rotation_index is current position of stick
+        '''
+        self.Models = {0: FourBlockStick}
+        '''
+        1: "red",
+        2: "blue",
+        3: "yellow",
+        4: "green",
+        5: pygame.Color(252, 2, 252),
+        6: pygame.Color(4, 255, 252),
+        '''
+
+        self.type_id = type_id
+        # big letter in self.Models is because all models are classes
+        self.stick_model = self.Models[type_id]()
+        self.rotation_index = 0
+
+    def rotate(self, sub_field):
+        pass
+        '''
+        We check is there a possibility to rotate stick at current
+        position in subfield. If so we add 1 to rotation index or, if
+        rotation index already equal to max rotation positions, we
+        make it equal to zero.
+        rotation point will be right top corner of the subfield
+        '''
+        '''
+        if stick_can_rotate(self, subfield):
+            if self.rotation_index >= self.stick_model.rotation_positions_count:
+                self.rotation_index = 0
+            else:
+                self.rotation_index += 1
+        '''
 
 
 class Stick():
     '''
-    we create a random stick and return it
+    we create a stick with type, which is second parameter of
+    constructor and color, which is first parameter of constructor
     '''
 
-    def __init__(self):
-        colors_codes = range(1, 7)
-        self.color = colors_codes
+    def __init__(self, color_code, type_id):
+        print("Create class Stick")
+        # colors_codes = range(1, 7)
+        self.color = color_code
+        self.type_id = type_id
+        self.model = StickType(self.type_id)
+
 
 

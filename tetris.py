@@ -1,5 +1,5 @@
 import pygame
-from time import time, sleep
+from time import time
 from model import Table, Stick
 from view import  Render
 import control
@@ -29,11 +29,13 @@ while not done:
             done = True
 
     if stick_count == 0:
-        print("\ntable before collapse\n", table)
+        # print("\ntable before collapse\n", table)
         # comment next line
         # table.collapse_similar()
-        stick = Stick()
-        print("\nnext stick colors =", stick.color)
+        stick_type_id = 0
+        stick_color = 0
+        stick = Stick(stick_color, stick_type_id)
+        # print("\nnext stick colors =", stick.color)
         '''
         if not control.add_stick(stick, table):
             print("Game Over.")
@@ -48,7 +50,6 @@ while not done:
 
     # pause simulation
     if keys[pygame.K_p]:
-        # sleep(12000)
         input()
 
     render(table.table)
