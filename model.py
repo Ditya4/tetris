@@ -7,6 +7,9 @@ class Table():
     '''
     also we create 3 invisible lines by adding +3 to rows at _init function,
     so we have enough space to rotate 4-th block stick
+    also we create 3 invisible columns on the left to have possibility to
+    move our 4 block vertical stick, while it's vertical to the left border of
+    table
     We create an array for our game field, filled with integer values,
     every value is a color which is equivalent to number.
     0 - black
@@ -19,8 +22,10 @@ class Table():
     '''
 
     def __init__(self, rows, columns):
-        self.rows = rows + 3
-        self.columns = columns
+        self.invisible_columns = 3
+        self.invisible_rows = 3
+        self.columns = columns + self.invisible_columns
+        self.rows = rows + self.invisible_rows
         self.table = self.create_table()
 
     def create_table(self):
@@ -35,27 +40,37 @@ class Table():
 
 class FourBlockStick():
     ''' OOOO - what is stick look like
+    OOOO
+    0000
+    0000
     1111
-    0000
-    0000
-    0000
     1 - is the place, where the blocks placed and 0 is empty spaces
     '''
 
-    def __init__(self):
-        rows = 4
-        columns = 4
+    def __init__(self, table):
+        '''
+        self.table_y - row index of left top block of sub-table, for
+        this type of stick
+        self.table_x - column index of left top block of sub-table, for
+        this type of stick and remember, what we have table.invisible_columns
+        on the left of our visible table.
+        '''
+        self.table_y = 0
+        self.table_x = 3 + table.invisible_columns
+
+        self.rows = 4
+        self.columns = 4
         print("Create class FourBlockStick")
-        self.shape = np.zeros(rows * columns, np.int32).reshape(
-                        rows, columns)
-        self.shape[0] = np.ones(rows, np.int32)
+        self.shape = np.zeros(self.rows * self.columns, np.int32).reshape(
+                        self.rows, self.columns)
+        self.shape[3] = np.ones(self.columns, np.int32)
         print(self.shape)
-        input()
+        # input()
 
 
 class StickType():
 
-    def __init__(self, type_id):
+    def __init__(self, type_id, table):
         print("Create class StickType")
         '''
         probably we will create a class for each stick type
@@ -65,23 +80,23 @@ class StickType():
         is the rotation possible.
 
           0   1   2   3   4  5   6
-        OOOO OOO OOO OO OO   OO  O
-             O     O OO  OO OO  OOO
+             OOO OOO OO OO   OO  O
+        OOOO O     O OO  OO OO  OOO
         we send to constructor type id = integer from 0 to 6
         and create a certain figure, which has it's own
         placement in subfield
         we will be have 3 +- types of subfields:
         and a few rotation positions
         for OOOO
+            .... .... ...O
+            .... .... ...O
+            .... .... ...O
             .... OOOO ...O
-            .... .... ...O
-            .... .... ...O
-            .... .... ...O
         for OOO
             O
-        ... OOO .OO ..O .O.
-        ... O.. ..O OOO .O.
-        ... ... ..O ... .OO
+        ... ... .OO ... .O.
+        ... OOO ..O O.. .O.
+        ... O.. ..O OOO .OO
 
         rotation_index is current position of stick
         '''
@@ -122,9 +137,10 @@ class Stick():
     '''
     we create a stick with type, which is second parameter of
     constructor and color, which is first parameter of constructor
+    we need to give our class a table to know about invisible columns count
     '''
 
-    def __init__(self, color_code, type_id):
+    def __init__(self, color_code, type_id, table):
         print("Create class Stick")
         # colors_codes = range(1, 7)
         self.color = color_code
