@@ -9,7 +9,7 @@ rows = 15
 columns = 12
 size = 40
 delta_t = 1
-time_delay = 1
+fps = 20
 button_press_delta = 0.2
 done = False
 stick_count = 0
@@ -33,24 +33,21 @@ while not done:
         # print("\ntable before collapse\n", table)
         # comment next line
         # table.collapse_similar()
-        stick_color = 0
+        stick_color = 1
         stick_type_id = 0
-        stick = Stick(stick_color, stick_type_id)
+        stick = Stick(stick_color, stick_type_id, table)
 
         # print("\nnext stick colors =", stick.color)
-        
+
         '''
         i am here, i want to draw stick to field and then add move down
         fuction.
         '''
-        
-        
-        
         if not control.add_stick(stick, table):
             print("Game Over.")
             done = True
         stick_count = 1
-        
+
     if time() - start > delta_t:
         stick_count = control.move_down(stick, table)
         start = time()
@@ -62,6 +59,6 @@ while not done:
         input()
 
     render(table.table)
-    clock.tick(time_delay)
+    clock.tick(fps)
 
 pygame.quit()

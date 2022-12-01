@@ -47,7 +47,7 @@ class FourBlockStick():
     1 - is the place, where the blocks placed and 0 is empty spaces
     '''
 
-    def __init__(self, table):
+    def __init__(self, color, table):
         '''
         self.table_y - row index of left top block of sub-table, for
         this type of stick
@@ -63,14 +63,14 @@ class FourBlockStick():
         print("Create class FourBlockStick")
         self.shape = np.zeros(self.rows * self.columns, np.int32).reshape(
                         self.rows, self.columns)
-        self.shape[3] = np.ones(self.columns, np.int32)
+        self.shape[3] = np.array([color] * self.columns, np.int32)
         print(self.shape)
         # input()
 
 
 class StickType():
 
-    def __init__(self, type_id, table):
+    def __init__(self, type_id, color, table):
         print("Create class StickType")
         '''
         probably we will create a class for each stick type
@@ -112,7 +112,7 @@ class StickType():
 
         self.type_id = type_id
         # big letter in self.Models is because all models are classes
-        self.stick_model = self.Models[type_id]()
+        self.stick_model = self.Models[type_id](color, table)
         self.rotation_index = 0
 
     def rotate(self, sub_field):
@@ -143,9 +143,10 @@ class Stick():
     def __init__(self, color_code, type_id, table):
         print("Create class Stick")
         # colors_codes = range(1, 7)
+        self.table = table
         self.color = color_code
         self.type_id = type_id
-        self.model = StickType(self.type_id)
+        self.model = StickType(self.type_id, self.color, self.table)
 
 
 
