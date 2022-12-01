@@ -16,6 +16,10 @@ stick_count = 0
 start = time()
 clock = pygame.time.Clock()
 
+directions = {"left": (0, -1),
+              "right": (0, 1),
+              "up": (-1, 0),
+              "down": (1, 0)}
 table = Table(rows, columns)
 render = Render(table.rows, table.columns, size)
 
@@ -49,7 +53,7 @@ while not done:
         stick_count = 1
 
     if time() - start > delta_t:
-        stick_count = control.move_down(stick, table)
+        stick_count = control.move(stick, table, directions["down"])
         start = time()
 
     keys = pygame.key.get_pressed()
@@ -57,6 +61,34 @@ while not done:
     # pause simulation
     if keys[pygame.K_p]:
         input()
+
+    if keys[pygame.K_LEFT]:
+        if not left_button_pressed:
+            control.move(stick, table, directions["left"])
+            left_button_pressed = 1
+            left_button_pressed_time_start = time()
+        if left_button_pressed:
+            left_button_pressed_time = (
+                time() - left_button_pressed_time_start)
+            if left_button_pressed_time > button_press_delta:
+                control.move(stick, table, directions["left"])
+                left_button_pressed_time_start = time()
+    else:
+        left_button_pressed = 0
+
+    if keys[pygame.K_RIGHT]:
+        if not right_button_pressed:
+            control.move(stick, table, directions["right"])
+            right_button_pressed = 1
+            right_button_pressed_time_start = time()
+        if right_button_pressed:
+            right_button_pressed_time = (
+                time() - right_button_pressed_time_start)
+            if right_button_pressed_time > button_press_delta:
+                control.move(stick, table, directions["right"])
+                right_button_pressed_time_start = time()
+    else:
+        right_button_pressed = 0
 
     render(table.table)
     clock.tick(fps)

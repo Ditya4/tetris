@@ -1,17 +1,18 @@
 
-def move_down(stick, table):
+def move(stick, table, direction):
     '''
-    called when a tick of time is become
+    we get a direction like tuple of 2 (offset_y, offset_x) and send
+    it to could_place function if we could place stick at that
+    position we erase old stick, and "draw"(place on table correspondent
+    colors_id) it at new position.
     '''
-    print(table)
 
-    print(stick.model.stick_model.table_y, stick.model.stick_model.table_x)
-    down = (1, 0)
-    if could_place(stick, table, down):
+    if could_place(stick, table, direction):
         erase_stick(stick, table)
-        place_stick(stick, table, down)
+        place_stick(stick, table, direction)
+        return 1
     else:
-        "FIXME in theory we should return 0 imo"
+        return 0
 
 
 def erase_stick(stick, table):
@@ -52,8 +53,8 @@ def check_cells_on_table(cells_to_check, stick_model, table):
         '''
         in next if a change last and for or, mb cause some bags.
         '''
-        if (0 < cell_y + to_table_y_offset < table.rows or
-                0 < cell_x + to_table_x_offset < table.columns or
+        if (0 < cell_y + to_table_y_offset < table.rows and
+                0 <= cell_x + to_table_x_offset < table.columns and
                 (table.table[cell_y + to_table_y_offset]
                             [cell_x + to_table_x_offset]) == 0):
             "we can put block inside this cell at the table"
