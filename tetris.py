@@ -34,8 +34,6 @@ while not done:
             done = True
 
     if stick_count == 0:
-        # print("\ntable before collapse\n", table)
-        # comment next line
         # table.collapse_similar()
         stick_color = 1
         stick_type_id = 0
@@ -43,10 +41,6 @@ while not done:
 
         # print("\nnext stick colors =", stick.color)
 
-        '''
-        i am here, i want to draw stick to field and then add move down
-        fuction.
-        '''
         if not control.add_stick(stick, table):
             print("Game Over.")
             done = True
@@ -89,6 +83,34 @@ while not done:
                 right_button_pressed_time_start = time()
     else:
         right_button_pressed = 0
+
+    if keys[pygame.K_UP]:
+        if not up_button_pressed:
+            control.rotate(stick, table)
+            up_button_pressed = 1
+            up_button_pressed_time_start = time()
+        if up_button_pressed:
+            up_button_pressed_time = (
+                time() - up_button_pressed_time_start)
+            if up_button_pressed_time > button_press_delta:
+                control.rotate(stick, table)
+                up_button_pressed_time_start = time()
+    else:
+        up_button_pressed = 0
+
+    if keys[pygame.K_SPACE] or keys[pygame.K_DOWN]:
+        if not down_button_pressed:
+            control.put_down(stick, table, directions["down"])
+            down_button_pressed = 1
+            down_button_pressed_time_start = time()
+        if down_button_pressed:
+            down_button_pressed_time = (
+                time() - down_button_pressed_time_start)
+            if down_button_pressed_time > button_press_delta * 3:
+                control.put_down(stick, table, directions["down"])
+                down_button_pressed_time_start = time()
+    else:
+        down_button_pressed = 0
 
     render(table.table)
     clock.tick(fps)

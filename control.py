@@ -1,4 +1,19 @@
 
+def rotate(stick, table):
+    '''
+    we check is there a possibility to place on table stick at
+    next rotation index. If so we rotate in.
+    '''
+    if can_rotate(stick.rotation_index.next(), table):
+        erase_stick(stick, table)
+        rotate(stick.rotation_index.next(), table)
+
+
+def can_rotate(stick_next, table):
+    pass
+
+
+
 def move(stick, table, direction):
     '''
     we get a direction like tuple of 2 (offset_y, offset_x) and send
@@ -13,6 +28,14 @@ def move(stick, table, direction):
         return 1
     else:
         return 0
+
+
+def put_down(stick, table, direction):
+    '''
+    we call move function while it not return 0
+    '''
+    while move(stick, table, direction):
+        pass
 
 
 def erase_stick(stick, table):
@@ -122,8 +145,6 @@ def place_stick(stick, table, offset):
     stick_model.table_x = to_table_x_offset
 
 
-
-
 def add_stick(stick, table):
     '''
     in this function we need to place a stick on the table.
@@ -158,7 +179,7 @@ def add_stick(stick, table):
     '''
     same_pos = (0, 0)
     if could_place(stick, table, same_pos):
-        print("as;dfjlkdsjflk;dsajflkja asdflkjasdk;fljsad")
+        # print("as;dfjlkdsjflk;dsajflkja asdflkjasdk;fljsad")
         place_stick(stick, table, same_pos)
         return True
     else:
