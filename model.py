@@ -57,15 +57,39 @@ class FourBlockStick():
         '''
         self.table_y = 0
         self.table_x = 3 + table.invisible_columns
-
+        self.color = color
         self.rows = 4
         self.columns = 4
         print("Create class FourBlockStick")
         self.shape = np.zeros(self.rows * self.columns, np.int32).reshape(
                         self.rows, self.columns)
-        self.shape[3] = np.array([color] * self.columns, np.int32)
+        self.shape[3] = np.array([self.color] * self.columns, np.int32)
         print(self.shape)
+        self.rotations = self.rotation_list()
+        self.rotation_index = 0
         # input()
+
+    def rotation_list(self):
+        first = list(np.zeros(self.rows * self.columns, np.int32).reshape(
+                        self.rows, self.columns))
+        first[self.rows - 1] = np.array([self.color] * self.columns, np.int32)
+
+        second = np.rot90(first)
+        result_list = [first, second]
+        return result_list
+
+    def next_rotation_index(self):
+        '''
+        if rotation index is last in rotations list we change it to zero,
+        else we return increment of rotation index.
+        '''
+        if self.rotation_index < len(self.rotations) - 1:
+            return self.rotation_index + 1
+        elif self.rotation_index == len(self.rotation) - 1:
+            return 0
+        else:
+            print("Some error in model.next_rotation_index.")
+
 
 
 class StickType():

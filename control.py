@@ -4,12 +4,12 @@ def rotate(stick, table):
     we check is there a possibility to place on table stick at
     next rotation index. If so we rotate in.
     '''
-    if can_rotate(stick.rotation_index.next(), table):
+    if can_rotate(stick, table):
         erase_stick(stick, table)
-        rotate(stick.rotation_index.next(), table)
+        rotate(stick, table)
 
 
-def can_rotate(stick_next, table):
+def can_rotate(stick, table):
     pass
 
 
@@ -21,8 +21,12 @@ def move(stick, table, direction):
     position we erase old stick, and "draw"(place on table correspondent
     colors_id) it at new position.
     '''
-
-    if could_place(stick, table, direction):
+    # could_place_new(field, to_table_offset_y, to_table_offset_x,
+    #                 rows, columns, table, offset=(0, 0))
+    stick_model = stick.model.stick_model
+    if could_place_new(stick_model.shape, stick_model.table_y,
+                       stick_model.table_x, stick_model.rows,
+                       stick_model.columns, table, direction):
         erase_stick(stick, table)
         place_stick(stick, table, direction)
         return 1
@@ -55,7 +59,8 @@ def erase_stick(stick, table):
                             [x + to_table_x_offset]) = black
 
 
-def check_cells_on_table(cells_to_check, stick_model, table):
+def check_cells_on_table(cells_to_check, to_table_y_offset,
+                         to_table_x_offset, table):
     '''
     to_table_y_offset and to_table_x_offset - are offsets from
     subfield to table.table.
@@ -70,8 +75,8 @@ def check_cells_on_table(cells_to_check, stick_model, table):
     stick could be already placed on the bottom cell, with same color.
     or we throw out that case during previous check?
     '''
-    to_table_y_offset = stick_model.table_y
-    to_table_x_offset = stick_model.table_x
+    # to_table_y_offset = stick_model.table_y
+    # to_table_x_offset = stick_model.table_x
     for cell_y, cell_x in cells_to_check:
         '''
         in next if a change last and for or, mb cause some bags.
@@ -86,8 +91,52 @@ def check_cells_on_table(cells_to_check, stick_model, table):
     return True
 
 
-def could_place(stick, table, offset):
+def could_place_new(field, to_table_offset_y, to_table_offset_x,
+                    rows, columns, table, offset=(0, 0)):
     '''
+    lets try to change input parameters from stick to subfield as array,
+    subfield y, subfield x, subfield.rows, subfield.columns,
+    offset gonna be not required parameter with default value (0, 0)
+    old version
+    we find a cells in stick subfield, which are not zero and
+    cells in direction, where we want to move are boards or zero
+    if our move direction is _same_pos(0, 0) we add same cells in
+    which are not zero values
+
+    '''
+    # stick_model = stick.model.stick_model
+    offset_y, offset_x = offset
+    cells_to_check = []
+    for y in range(rows):
+        for x in range(columns):
+            if field[y][x]:
+                if offset_y == 0 and offset_x == 0:
+                    cells_to_check.append((y, x))
+                else:
+                    if (y + offset_y == rows or
+                            y + offset_y == -1 or
+                            x + offset_x == columns or
+                            x + offset_x == -1):
+                        cells_to_check.append((y + offset_y, x + offset_x))
+                    elif field[y + offset_y][x + offset_x] == 0:
+                        cells_to_check.append((y + offset_y, x + offset_x))
+                    else:
+                        "Not do anything. We find not zero and not border."
+    if not check_cells_on_table(cells_to_check, to_table_offset_y,
+                                to_table_offset_x, table):
+        "No we can't move/place"
+        return False
+    else:
+        "Yes we can move/place"
+        return True
+
+
+def could_place_old(stick, table, offset):
+    '''
+    lets try to change input parameters from stick to subfield as array,
+    subfield y, subfield x, subfield.rows, subfield.columns,
+    offset gonna be not required parameter with default value (0, 0)
+    old version
     we find a cells in stick subfield, which are not zero and
     cells in direction, where we want to move are boards or zero
     if our move direction is _same_pos(0, 0) we add same cells in
@@ -177,8 +226,11 @@ def add_stick(stick, table):
     in which we want to move is zero or border of subfield we all this cell
     into list of cells, which should be checked, this list we return.
     '''
+    stick_model = stick.model.stick_model
     same_pos = (0, 0)
-    if could_place(stick, table, same_pos):
+    if could_place_new(stick_model.shape, stick_model.table_y, stick_model.table_x,
+                       stick_model.rows, stick_model.columns, table, same_pos):
+    # if could_place_old(stick, table, same_pos):
         # print("as;dfjlkdsjflk;dsajflkja asdflkjasdk;fljsad")
         place_stick(stick, table, same_pos)
         return True
