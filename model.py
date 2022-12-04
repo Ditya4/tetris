@@ -85,7 +85,7 @@ class FourBlockStick():
         '''
         if self.rotation_index < len(self.rotations) - 1:
             return self.rotation_index + 1
-        elif self.rotation_index == len(self.rotation) - 1:
+        elif self.rotation_index == len(self.rotations) - 1:
             return 0
         else:
             print("Some error in model.next_rotation_index.")
