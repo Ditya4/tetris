@@ -38,7 +38,56 @@ class Table():
         return str(self.table)
 
 
-class FourBlockTShape():
+class ZShape():
+    '''
+    ...
+    .OO
+    OO.
+    '''
+
+    def __init__(self, color, table):
+        '''
+        self.table_y - row index of left top block of sub-table, for
+        this type of stick
+        self.table_x - column index of left top block of sub-table, for
+        this type of stick and remember, what we have table.invisible_columns
+        on the left of our visible table.
+        '''
+        self.table_y = table.invisible_rows - 2
+        self.table_x = 3 + table.invisible_columns
+        self.color = color
+        self.rows = 3
+        self.columns = 3
+        print("Create class ZShape")
+        # self.shape = np.once(self.rows * self.columns, np.int32).reshape(
+        #                 self.rows, self.columns)
+        self.shape = np.array([0, 0, 0, 0, 1, 1, 1, 1, 0],
+                              np.int32).reshape(self.rows, self.columns)
+        print(self.shape)
+        self.rotations = self.rotation_list()
+        self.rotation_index = 0
+        # input()
+
+    def rotation_list(self):
+        first = list(self.shape)
+        second = np.rot90(first)
+        result_list = [first, second]
+        return result_list
+
+    def next_rotation_index(self):
+        '''
+        if rotation index is last in rotations list we change it to zero,
+        else we return increment of rotation index.
+        '''
+        if self.rotation_index < len(self.rotations) - 1:
+            return self.rotation_index + 1
+        elif self.rotation_index == len(self.rotations) - 1:
+            return 0
+        else:
+            print("Some error in model.next_rotation_index.")
+
+
+class TShape():
     '''
     ...
     OOO
@@ -58,7 +107,7 @@ class FourBlockTShape():
         self.color = color
         self.rows = 3
         self.columns = 3
-        print("Create class FourBlockTShape")
+        print("Create class TShape")
         # self.shape = np.once(self.rows * self.columns, np.int32).reshape(
         #                 self.rows, self.columns)
         self.shape = np.array([0, 0, 0, 1, 1, 1, 0, 1, 0],
@@ -90,7 +139,7 @@ class FourBlockTShape():
             print("Some error in model.next_rotation_index.")
 
 
-class FourBlockSquare():
+class Square():
     '''
     OO
     OO
@@ -109,7 +158,7 @@ class FourBlockSquare():
         self.color = color
         self.rows = 2
         self.columns = 2
-        print("Create class FourBlockSquare")
+        print("Create class Square")
         # self.shape = np.once(self.rows * self.columns, np.int32).reshape(
         #                 self.rows, self.columns)
         self.shape = np.array([self.color] * self.rows * self.columns,
@@ -128,7 +177,7 @@ class FourBlockSquare():
         return 0
 
 
-class FourBlockStick():
+class StickShape():
     ''' OOOO - what is stick look like
     ....
     ....
@@ -150,7 +199,7 @@ class FourBlockStick():
         self.color = color
         self.rows = 4
         self.columns = 4
-        print("Create class FourBlockStick")
+        print("Create class StickShape")
         self.shape = np.zeros(self.rows * self.columns, np.int32).reshape(
                         self.rows, self.columns)
         self.shape[3] = np.array([self.color] * self.columns, np.int32)
@@ -179,7 +228,6 @@ class FourBlockStick():
             return 0
         else:
             print("Some error in model.next_rotation_index.")
-
 
 
 class StickType():
@@ -214,9 +262,10 @@ class StickType():
 
         rotation_index is current position of stick
         '''
-        self.Models = {0: FourBlockStick,
-                       1: FourBlockSquare,
-                       2: FourBlockTShape,
+        self.Models = {0: StickShape,
+                       1: Square,
+                       2: TShape,
+                       3: ZShape
                        }
         '''
         1: "red",

@@ -67,4 +67,3 @@ class Render():
                         (j * self.size, (i - self.invisible_rows) * self.size,
                          self.size, self.size), 1)
         pygame.display.update()
-

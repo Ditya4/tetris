@@ -36,6 +36,15 @@ def rotate(stick, table):
     as i understand we send new stick to can_rotate, but on the table we
     still have cells from old stick, so... lets try to erase stick
     from table and call can_rotate.
+
+    FIXME
+    if we have next situation:
+    O..
+    OO.
+    .O.
+    at the left border
+    and we press rotate, it moves for 2 cells to the right and rotate,
+    but should rotate at the same place
     '''
     stick_model = stick.model.stick_model
     print("Call control.rotate.")
