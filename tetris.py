@@ -17,7 +17,7 @@ stick_count = 0
 start = time()
 clock = pygame.time.Clock()
 
-stick_type = range(2)
+stick_type = range(3)
 colors = range(1, 3)
 
 directions = {"left": (0, -1),
