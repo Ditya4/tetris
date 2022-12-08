@@ -1,4 +1,7 @@
 
+from copy import deepcopy
+
+
 def rotate_stick(stick, table):
     stick_model = stick.model.stick_model
 
@@ -11,12 +14,83 @@ def rotate_stick(stick, table):
 def rotate(stick, table):
     '''
     we check is there a possibility to place on table stick at
-    next rotation index. If so we rotate in.
+    next rotation index. If so we rotate it.
+    if we press rotate in situation below:
+    ] O <----
+    ] O <--- we rotate in this direction
+    ] O <--
+    ] O <-
+    we can't rotate with the center of right bottom, cause stick will
+    be out of borders(cause it's python_ it will be separated: part
+    will be on the left side and part with negative indexes on the right
+    part of table), so in case our subfield left border is at invisible part
+    and function can rotate return False
+    we should try to add from (1 to 3 - how far x coordinate are at
+    invisible part) and call function can rotate for this place. Next
+    rotation, to make our stick vertical again it will move x coordinate
+    for 3 indexes to the right.
+    For this case idkh_ to make it with already written functions, so
+    i decide to write a few new functions for this case.
+    no, i'll try to make _deepcopy of stick and change it's table_x
+    parameter to +1 to old value.
+    as i understand we send new stick to can_rotate, but on the table we
+    still have cells from old stick, so... lets try to erase stick
+    from table and call can_rotate.
     '''
+    stick_model = stick.model.stick_model
     print("Call control.rotate.")
     if can_rotate(stick, table):
         erase_stick(stick, table)
         rotate_stick(stick, table)
+    else:
+        step_x = 1
+        new_x = stick_model.table_x
+        try_counter = 0
+        while try_counter < stick_model.columns:
+        # while new_x < 0:
+            # if we can't rotate and left side of subfield is in
+            # invisible part of table we try to move subfield
+            # to the right and try to rotate.
+            # table.invisible_columns = 3
+            new_x += step_x
+            print("new_x", new_x)
+
+            new_stick = deepcopy(stick)
+            new_stick_model = new_stick.model.stick_model
+            new_stick_model.table_x = new_x
+
+
+            # can rotate return true in case only 3 free spaces for stick
+            # but not 2 or one. it fixes some how. lol. i put erase stick
+            # inside this if, it was before if.
+            if can_rotate(new_stick, table):
+                erase_stick(stick, table)
+                stick_model.table_x = new_x
+                rotate_stick(stick, table)
+                try_counter = stick_model.columns
+                # place_stick
+                print("can_rotate with new_x =", new_x)
+                
+                # rotare(stick, table, new_x)
+            try_counter += 1
+'''
+def can_rotate_with_new_x(stick, table, new_x):
+    
+    # if we can rotate with new_x instead of stick_model.table_x we return True
+    # else return False
+    
+    stick_model = stick.model.stick_model
+    
+    if could_place_wint_new_x(
+                stick_model.rotations[stick_model.next_rotation_index()],
+                stick_model.table_y, new_x,
+                stick_model.rows, stick_model.columns, stick, table):
+        print("Can rotate.")
+        return True
+    else:
+        print("Can't rotate.")
+        return False
+'''
 
 
 def could_place(field, to_table_offset_y, to_table_offset_x,
@@ -52,7 +126,7 @@ def could_place(field, to_table_offset_y, to_table_offset_x,
                         cells_to_check.append((y + offset_y, x + offset_x))
                     else:
                         "Not do anything. We find not zero and not border."
-    print(field, cells_to_check)
+    # print(field, cells_to_check)
     if not check_cells_on_table(cells_to_check, to_table_offset_y,
                                 to_table_offset_x, stick, table):
         "No we can't move/place"
@@ -145,17 +219,16 @@ def check_cells_on_table(cells_to_check, to_table_y_offset,
 
     FIXME if we rotate a stick some cells could be replaced by other/same
     cells of this stick. we should throw out cases, when it happened.
+    In, at least, one case, during rotation, we erase stick before we
+    call this function.
     '''
     # to_table_y_offset = stick_model.table_y
     # to_table_x_offset = stick_model.table_x
     if stick is not None:
         list_of_stick_cells = get_list_of_stick_cells(stick)
-    print("control.check_cells_on_table", table)
+    # print("control.check_cells_on_table", table)
 
     for cell_y, cell_x in cells_to_check:
-        '''
-        in next if condition i change last and for or, mb cause some bags.
-        '''
         if stick is None:
             if (0 < cell_y + to_table_y_offset < table.rows and
                     0 <= cell_x + to_table_x_offset < table.columns and
@@ -194,10 +267,10 @@ def get_list_of_stick_cells(stick):
 
 
 def place_stick(stick, table, offset=(0, 0)):
-    print("Call place_stick function.")
+    # print("Call place_stick function.")
 
     stick_model = stick.model.stick_model
-    print(stick_model.shape)
+    # print(stick_model.shape)
     offset_y, offset_x = offset
 
     to_table_y_offset = stick_model.table_y + offset_y
@@ -211,6 +284,7 @@ def place_stick(stick, table, offset=(0, 0)):
 
     stick_model.table_y = to_table_y_offset
     stick_model.table_x = to_table_x_offset
+    print("stick_model.table_x", stick_model.table_x)
 
 
 def add_stick(stick, table):
