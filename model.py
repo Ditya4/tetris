@@ -38,6 +38,44 @@ class Table():
         return str(self.table)
 
 
+class FourBlockSquare():
+    '''
+    OO
+    OO
+    '''
+
+    def __init__(self, color, table):
+        '''
+        self.table_y - row index of left top block of sub-table, for
+        this type of stick
+        self.table_x - column index of left top block of sub-table, for
+        this type of stick and remember, what we have table.invisible_columns
+        on the left of our visible table.
+        '''
+        self.table_y = table.invisible_columns - 1
+        self.table_x = 3 + table.invisible_columns
+        self.color = color
+        self.rows = 2
+        self.columns = 2
+        print("Create class FourBlockSquare")
+        # self.shape = np.once(self.rows * self.columns, np.int32).reshape(
+        #                 self.rows, self.columns)
+        self.shape = np.array([self.color] * self.rows * self.columns,
+                              np.int32).reshape(self.rows, self.columns)
+        print(self.shape)
+        self.rotations = self.rotation_list()
+        self.rotation_index = 0
+        # input()
+
+    def rotation_list(self):
+        result = [np.array([self.color] * self.rows * self.columns,
+                          np.int32).reshape(self.rows, self.columns)]
+        return result
+
+    def next_rotation_index(self):
+        return 0
+
+
 class FourBlockStick():
     ''' OOOO - what is stick look like
     OOOO
@@ -46,6 +84,7 @@ class FourBlockStick():
     1111
     1 - is the place, where the blocks placed and 0 is empty spaces
     '''
+    
 
     def __init__(self, color, table):
         '''
@@ -124,7 +163,8 @@ class StickType():
 
         rotation_index is current position of stick
         '''
-        self.Models = {0: FourBlockStick}
+        self.Models = {0: FourBlockStick,
+                       1: FourBlockSquare,}
         '''
         1: "red",
         2: "blue",

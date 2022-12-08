@@ -3,6 +3,7 @@ from time import time
 from model import Table, Stick
 from view import Render
 import control
+from random import choice
 
 
 rows = 15
@@ -15,6 +16,9 @@ done = False
 stick_count = 0
 start = time()
 clock = pygame.time.Clock()
+
+stick_type = range(2)
+colors = range(1, 3)
 
 directions = {"left": (0, -1),
               "right": (0, 1),
@@ -35,9 +39,9 @@ while not done:
 
     if stick_count == 0:
         # table.collapse_similar()
-        stick_color = 1
-        stick_type_id = 0
-        stick = Stick(stick_color, stick_type_id, table)
+        # stick_color = 1
+        # stick_type_id = 0
+        stick = Stick(choice(colors), choice(stick_type), table)
 
         # print("\nnext stick colors =", stick.color)
 

@@ -47,7 +47,7 @@ def rotate(stick, table):
         new_x = stick_model.table_x
         try_counter = 0
         while try_counter < stick_model.columns:
-        # while new_x < 0:
+            # while new_x < 0:
             # if we can't rotate and left side of subfield is in
             # invisible part of table we try to move subfield
             # to the right and try to rotate.
@@ -59,9 +59,8 @@ def rotate(stick, table):
             new_stick_model = new_stick.model.stick_model
             new_stick_model.table_x = new_x
 
-
             # can rotate return true in case only 3 free spaces for stick
-            # but not 2 or one. it fixes some how. lol. i put erase stick
+            # but not 2 or one. it fixes some how. lol_. i put erase stick
             # inside this if, it was before if.
             if can_rotate(new_stick, table):
                 erase_stick(stick, table)
@@ -70,27 +69,9 @@ def rotate(stick, table):
                 try_counter = stick_model.columns
                 # place_stick
                 print("can_rotate with new_x =", new_x)
-                
-                # rotare(stick, table, new_x)
+
+                # rotare_(stick, table, new_x)
             try_counter += 1
-'''
-def can_rotate_with_new_x(stick, table, new_x):
-    
-    # if we can rotate with new_x instead of stick_model.table_x we return True
-    # else return False
-    
-    stick_model = stick.model.stick_model
-    
-    if could_place_wint_new_x(
-                stick_model.rotations[stick_model.next_rotation_index()],
-                stick_model.table_y, new_x,
-                stick_model.rows, stick_model.columns, stick, table):
-        print("Can rotate.")
-        return True
-    else:
-        print("Can't rotate.")
-        return False
-'''
 
 
 def could_place(field, to_table_offset_y, to_table_offset_x,
@@ -126,13 +107,13 @@ def could_place(field, to_table_offset_y, to_table_offset_x,
                         cells_to_check.append((y + offset_y, x + offset_x))
                     else:
                         "Not do anything. We find not zero and not border."
-    # print(field, cells_to_check)
+    print(field, cells_to_check)
     if not check_cells_on_table(cells_to_check, to_table_offset_y,
                                 to_table_offset_x, stick, table):
-        "No we can't move/place"
+        print("No we can't move/place")
         return False
     else:
-        "Yes we can move/place"
+        print("Yes we can move/place")
         return True
 
 
@@ -226,16 +207,18 @@ def check_cells_on_table(cells_to_check, to_table_y_offset,
     # to_table_x_offset = stick_model.table_x
     if stick is not None:
         list_of_stick_cells = get_list_of_stick_cells(stick)
-    # print("control.check_cells_on_table", table)
+        print("list_of_stick_cells =", list_of_stick_cells)
+
+    print("control.check_cells_on_table", table)
+    # input()
 
     for cell_y, cell_x in cells_to_check:
         if stick is None:
+            print("Stick is None")
             if (0 < cell_y + to_table_y_offset < table.rows and
                     0 <= cell_x + to_table_x_offset < table.columns and
-                    # probably we need to add
-                    # and cell_y, cell_x not in stick.cells
                     (table.table[cell_y + to_table_y_offset]
-                    [cell_x + to_table_x_offset]) == 0):
+                     [cell_x + to_table_x_offset]) == 0):
                 "we can put block inside this cell at the table"
             else:
                 return False
@@ -302,15 +285,19 @@ def add_stick(stick, table):
     if table_move_y we transform our subfield coordinates to field coordinates
     we have stick.y and stick.x which are ours field coordinates of left top of
     subfield
-    @@@ how we gonna move our stick to the left wall of field, while it's vertical?
-    our subfield left top x coordinate is gonna be -3. Let's create also 3 invisible
+    @@@ how we gonna_ move our stick to the left wall of field, while it's
+    vertical?
+    our subfield left top x coordinate is gonna_ be -3. Let's create also
+    3 invisible
     columns?! or we need some other idea about stick rotation.
     '''
 
     '''
-    lets create function, which will return which exactly cells should we check
+    lets create function, which will return which exactly cells should we
+    check
     to have possibility to move our stick(or not to move, if we add_stick for
-    the first time. so we give this function a stick, a table and move(dict of
+    the first time. so we give this function a stick, a table and move
+    dict_ of
     {"left": (-1, 0)
      "right": (1, 0)
      "down": (0, 1)
